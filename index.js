@@ -55,7 +55,6 @@ APIApp.get("/", async (req, res) => {
   }
 });
 
-
 //get method single product by id
 APIApp.get("/:id", async (req, res) => {
   try {
@@ -71,19 +70,37 @@ APIApp.get("/:id", async (req, res) => {
 });
 
 //delete a product
-APIApp.delete("/delete/:id", async(req,res)=>{
-    try{
-        const product = await Product.findByIdAndDelete(req.params.id);
-        if(product){
-            res.json(product);
-        }
-        else{
-            res.status(404).json({error:"Product Not found"});
-        }
-    }catch(error){
-        res.status(500).json(error);
+APIApp.delete("/delete/:id", async (req, res) => {
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ error: "Product Not found" });
     }
-})
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+//update an existing product
+APIApp.put("/update/:id", async (req, res) => {
+  try {
+    const { name, price, description } = req.body;
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      { name, price, description },
+      { new: true }
+    );
+    if (updatedProduct) {
+      res.json(updatedProduct);
+    } else {
+      res.status(404).json({ error: "Product not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.listen(port, () => {
   console.log("Server is running");
