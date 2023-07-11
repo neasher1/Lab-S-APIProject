@@ -27,20 +27,31 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema);
 
-APIApp.get("/", (req, res) => {
-  res.send("Test Server");
-});
+// APIApp.get("/", (req, res) => {
+//   res.send("Test Server");
+// });
 
+//create method
 APIApp.post("/create", async (req, res) => {
   try {
     const { name, price, description } = req.body;
     const product = new Product({ name, price, description });
     const savedProduct = await product.save();
-    if(savedProduct){
-        res.status(200).json(savedProduct);
+    if (savedProduct) {
+      res.status(200).json(savedProduct);
     }
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//get method
+APIApp.get("/", async (req, res) => {
+  try {
+    const allProduct = await Product.find();
+    res.status(200).json(allProduct);
+  } catch (error) {
+    res.status(500).json({ error });
   }
 });
 
