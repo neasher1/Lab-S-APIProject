@@ -19,17 +19,29 @@ mongoose
     console.error("Error connecting to DB:", error);
   });
 
-
 const productSchema = new mongoose.Schema({
-    name: String, 
-    price: Number,
-    description: String,
+  name: String,
+  price: Number,
+  description: String,
 });
 
-const Product = mongoose.model('Product', productSchema);
+const Product = mongoose.model("Product", productSchema);
 
 APIApp.get("/", (req, res) => {
   res.send("Test Server");
+});
+
+APIApp.post("/create", async (req, res) => {
+  try {
+    const { name, price, description } = req.body;
+    const product = new Product({ name, price, description });
+    const savedProduct = await product.save();
+    if(savedProduct){
+        res.status(200).json(savedProduct);
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(port, () => {
