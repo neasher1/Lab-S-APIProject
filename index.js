@@ -70,7 +70,7 @@ APIApp.get("/:id", async (req, res) => {
   }
 });
 
-//update a product
+//delete a product
 APIApp.delete("/delete/:id", async(req,res)=>{
     try{
         const product = await Product.findByIdAndDelete(req.params.id);
